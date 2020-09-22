@@ -38,7 +38,7 @@ class Grid(QWidget):
         self.size = size
         self.setFixedSize(FIXED_SIZE, FIXED_SIZE)
         self.setStyleSheet("background-color: #283747;")
-        grid_size = sizes // n
+        grid_size = size // n
         self.grid = [[Node(grid_size, self) for i in range(n)] for j in range(n)]
 
         for i in range(n):
