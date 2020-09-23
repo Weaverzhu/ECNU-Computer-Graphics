@@ -17,45 +17,13 @@ class MainWindow(QMainWindow):
         lay.addChildWidget(self.g)
 
 
-def dda(p0, p1, func):
-    dx = abs(p0[0] - p1[0])
-    dy = abs(p0[1] - p1[1])
-    offset = int(dx if dx > dy else dy)
-    sx = dx / offset
-    sy = dy / offset
-    x = p0[0]
-    y = p0[1]
-    timer = QTimer()
-    for i in range(offset):
-        func(round(x), round(y))
-        x = x + sx
-        y = y + sy
-
-
-def bresenham(p0, p1, func):
-    fi = 0
-    se = 1
-    d = [abs(p0[fi] - p1[fi]), abs(p0[se] - p1[se])]
-    if d[fi] < d[se]:
-        fi, se = se, fi
-
-    x = p0[fi]
-    y = p0[se]
-    func(x, y)
-    p = 2 * d[se] - d[fi]
-    while x < p1[fi]:
-        if p > 0:
-            p = p - 2 * d[fi]
-            y = y + 1
-
-        x = x + 1
-        p = p + 2 * d[se]
-        func(x, y)
-
+x0, y0, x1, y1 = map(
+    int, input("dda algorithm: please input p0(x, y) and p1(x, y): \n").split()
+)
 
 app = QtWidgets.QApplication(sys.argv)
 window = MainWindow()
 window.show()
-bresenham([1, 0], [5, 9], window.g.toggle)
-sys.exit(app.exec_())
-app = QtWidgets.QApplication(sys.argv)
+dda([x0, y0], [x1, y1], window.g.toggle)
+# sys.exit(app.exec_())
+app.exec_()
