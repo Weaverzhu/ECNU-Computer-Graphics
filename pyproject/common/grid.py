@@ -69,8 +69,12 @@ class Grid(QWidget):
     def grid_click(self, node):
         pass
 
-    def toggle(self, x, y):
-        self.grid[x][self.n - 1 - y].toggle()
+    def toggle(self, x, y, state=True):
+        n = self.n
+        if x < 0 or x >= n or y < 0 or y >= n:
+            return
+        self.grid[x][self.n - 1 - y].toggle(state)
+
 
     pass
 
@@ -82,5 +86,4 @@ if __name__ == "__main__":
     gui = Grid(10)
     gui.toggle(5, 5)
     gui.show()
-
     sys.exit(app.exec_())

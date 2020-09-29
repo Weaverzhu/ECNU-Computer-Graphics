@@ -37,6 +37,7 @@ class BresenhanGrid(Grid):
             self.p = [node.x, node.y]
         else:
             self.line_func(self.p, [node.x, node.y], self.toggle)
+            self.p = None
 
 
 import sys
