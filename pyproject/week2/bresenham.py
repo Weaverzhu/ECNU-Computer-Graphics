@@ -1,10 +1,9 @@
-from grid import Grid
-
+from ..common.grid import Grid, Node
 from PyQt5 import QtWidgets
-import sys
 
 
 def bresenham(p0, p1, func):
+    print(p0, p1)
     fi = 0
     se = 1
     d = [abs(p0[fi] - p1[fi]), abs(p0[se] - p1[se])]
@@ -13,24 +12,36 @@ def bresenham(p0, p1, func):
     if p0[fi] > p1[fi]:
         p0, p1 = p1, p0
     func(p0[0], p0[1])
+
+    dt = 1 if p0[se] < p1[se] else -1
+
     p = 2 * d[se] - d[fi]
     while p0[fi] < p1[fi]:
         if p > 0:
             p = p - 2 * d[fi]
-            p0[se] = p0[se] + 1
+            p0[se] = p0[se] + dt
 
         p0[fi] = p0[fi] + 1
         p = p + 2 * d[se]
         func(p0[0], p0[1])
 
+class BresenhanGrid(Grid):
+    def __init__(self, line_func, **params):
+        super().__init__(**params)
 
-x0, y0, x1, y1 = map(
-    int, input("bresenham algorithm: please input p0(x, y) and p1(x, y): \n").split()
-)
+        self.line_func = line_func
+        self.p = None
+
+    def grid_click(self, node: Node):
+        if self.p is None:
+            self.p = [node.x, node.y]
+        else:
+            self.line_func(self.p, [node.x, node.y], self.toggle)
+
+
+import sys
 
 app = QtWidgets.QApplication(sys.argv)
-window = Grid(20)
-window.show()
-bresenham([x0, y0], [x1, y1], window.toggle)
+gui = BresenhanGrid(n=10, line_func=bresenham)
+gui.show()
 sys.exit(app.exec_())
-app = QtWidgets.QApplication(sys.argv)
