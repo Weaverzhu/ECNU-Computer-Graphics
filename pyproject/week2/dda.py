@@ -31,9 +31,11 @@ class DDAGrid(Grid):
             self.p = None
 
 
-import sys
+if __name__ == "__main__":
 
-app = QtWidgets.QApplication(sys.argv)
-gui = DDAGrid(n=10, line_func=dda)
-gui.show()
-sys.exit(app.exec_())
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    gui = DDAGrid(n=10, line_func=dda)
+    gui.show()
+    sys.exit(app.exec_())

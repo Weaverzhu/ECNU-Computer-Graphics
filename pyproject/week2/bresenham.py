@@ -3,7 +3,6 @@ from PyQt5 import QtWidgets
 
 
 def bresenham(p0, p1, func):
-    print(p0, p1)
     fi = 0
     se = 1
     d = [abs(p0[fi] - p1[fi]), abs(p0[se] - p1[se])]
@@ -39,10 +38,15 @@ class BresenhanGrid(Grid):
             self.line_func(self.p, [node.x, node.y], self.toggle)
             self.p = None
 
+def main():
 
-import sys
+    import sys
 
-app = QtWidgets.QApplication(sys.argv)
-gui = BresenhanGrid(n=10, line_func=bresenham)
-gui.show()
-sys.exit(app.exec_())
+    app = QtWidgets.QApplication(sys.argv)
+    gui = BresenhanGrid(n=10, line_func=bresenham)
+    gui.show()
+    sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    main()

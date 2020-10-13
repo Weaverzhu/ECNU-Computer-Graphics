@@ -42,6 +42,9 @@ class Node(QFrame):
         self.y = y
         self.call_back = call_back
 
+    def __str__(self):
+        return "<Node x={}, y={}>".format(self.x, self.y)
+
 
 class Grid(QWidget):
     def __init__(self, n, size=500):

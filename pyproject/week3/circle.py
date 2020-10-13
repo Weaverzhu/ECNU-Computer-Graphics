@@ -38,11 +38,12 @@ class CircleGrid(Grid):
             draw_circle(self.p[0], self.p[1], r, self.toggle)
             self.p = None
 
+if __name__ == "__main__":
 
-import sys
-from PyQt5 import QtWidgets
+    import sys
+    from PyQt5 import QtWidgets
 
-app = QtWidgets.QApplication(sys.argv)
-gui = CircleGrid(n=50, circle_func=draw_circle)
-gui.show()
-sys.exit(app.exec_())
+    app = QtWidgets.QApplication(sys.argv)
+    gui = CircleGrid(n=50, circle_func=draw_circle)
+    gui.show()
+    sys.exit(app.exec_())
