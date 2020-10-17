@@ -14,18 +14,17 @@ from PyQt5.QtCore import Qt
 
 
 class Node(QFrame):
-    def toggle(self, state=None):
-        if state is None:
-            self.on = not self.on
-        else:
-            self.on = state
+    def toggle(self, state):
+        self.on = state
         self.update()
 
     def update(self):
-        if self.on:
+        if self.on == 1:
             self.setStyleSheet("background-color: #935115;border: 1px solid black;")
-        else:
+        elif self.on == 0:
             self.setStyleSheet("background-color: #283747;border: 1px solid black;")
+        elif self.on == 2:
+            self.setStyleSheet("background-color: #ffffff;border: 1px solid black;")
 
     def mousePressEvent(self, event):
         self.call_back(self)
@@ -35,7 +34,7 @@ class Node(QFrame):
         super(Node, self).__init__(mainWindow)
         self.setFixedSize(size, size)
         self.grid = mainWindow
-        self.on = False
+        self.on = 0
         self.update()
 
         self.x = x
@@ -43,7 +42,7 @@ class Node(QFrame):
         self.call_back = call_back
 
     def __str__(self):
-        return "<Node x={}, y={}>".format(self.x, self.y)
+        return "<Node x={}, y={}, state={}>".format(self.x, self.y, self.on)
 
 
 class Grid(QWidget):
@@ -72,7 +71,7 @@ class Grid(QWidget):
     def grid_click(self, node):
         pass
 
-    def toggle(self, x, y, state=True):
+    def toggle(self, x, y, state=1):
         n = self.n
         if x < 0 or x >= n or y < 0 or y >= n:
             return
