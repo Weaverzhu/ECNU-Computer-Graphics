@@ -50,7 +50,7 @@ class Line2:
         return self.b - self.a
 
     def y_bound(self):
-        l, r = self.a[0], self.b[0]
+        l, r = self.a[1], self.b[1]
         if l > r:
             l, r = r, l
         return (l, r)

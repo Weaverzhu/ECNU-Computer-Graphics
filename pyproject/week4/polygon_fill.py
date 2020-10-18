@@ -22,7 +22,6 @@ def polygon_fill(p: List[Node], func: callable):
         point_by_y[a.y].append(a.x)
         b = p[(i+1)%n]
         tb = (b.x, b.y)
-
         point_map[ta].append(tb)
         point_map[tb].append(ta)
 
@@ -33,9 +32,10 @@ def polygon_fill(p: List[Node], func: callable):
     lines.sort(key=lambda l: l.y_bound())
 
     events = []
-    for i in range(lines):
+    for i in range(len(lines)):
         l = lines[i]
         yb = l.y_bound()
+        
         events.append((yb[0], -i-1))
         events.append((yb[1], i))
         
@@ -54,17 +54,17 @@ def polygon_fill(p: List[Node], func: callable):
             ecnt += 1
             if e[1] < 0:
                 idx = -e[1] - 1
-                lines_set.remove(lines[idx])
+                lines_set.add(lines[idx])
             else:
                 idx = e[1]
-                lines_set.add(lines[idx])
+                lines_set.remove(lines[idx])
         
         cross = []
         for x in point_by_y[y]:
             ano = point_map[(x, y)]
-            assert len(ano) == 2, "should be another 2 points, x={}, y={}".format(x, y)
+            assert len(ano) == 2, "should be another 2 points, x={}, y={}, ano={}".format(x, y, ano)
             
-            if (ano[0][1] >= y) != (ano[1][1] >= y):
+            if (ano[0][1] >= y) == (ano[1][1] >= y):
                 w = 2
             else:
                 w = 1
@@ -76,19 +76,25 @@ def polygon_fill(p: List[Node], func: callable):
             assert indicator != -1, "shouldn't be not having cross point, y={}".format(y)
 
             if indicator == 1:
-                cross.append((int(x + 0.5), 1))
+                x = int(round(x))
+                if not x in point_by_y[y]:
+                    cross.append((x, 1))
 
         cross.sort()
+        
 
         cur = 0
         cross.append((INF, 0))
+        
         n = len(cross)
         for i in range(n-1):
             x1 = cross[i][0]
             w = cross[i][1]
             x2 = cross[i+1][0]
             cur += w
+            
             if cur % 2 == 1:
+                
                 for x in range(x1, x2+1):
                     func(x, y)
         
@@ -123,14 +129,15 @@ class PolygonFillGrid(Grid):
 
             
         if self.p.count(node) > 1:
-            
-            print("polygon")
+            self.p = self.p[:-1]
+            # print("polygon")
             self.fill_func(self.p, self.toggle)
+            self.p = []
 
 if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    gui = PolygonFillGrid(n=20, fill_func=polygon_fill)
+    gui = PolygonFillGrid(n=30, fill_func=polygon_fill)
     gui.show()
     sys.exit(app.exec_())
