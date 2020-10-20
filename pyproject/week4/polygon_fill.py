@@ -9,7 +9,6 @@ from collections import defaultdict
 INF = 1000000000
 
 
-
 def polygon_fill(p: List[Node], func: callable):
     lines = []
     n = len(p)
@@ -20,7 +19,7 @@ def polygon_fill(p: List[Node], func: callable):
         a = p[i]
         ta = (a.x, a.y)
         point_by_y[a.y].append(a.x)
-        b = p[(i+1)%n]
+        b = p[(i+1) % n]
         tb = (b.x, b.y)
         point_map[ta].append(tb)
         point_map[tb].append(ta)
@@ -35,15 +34,15 @@ def polygon_fill(p: List[Node], func: callable):
     for i in range(len(lines)):
         l = lines[i]
         yb = l.y_bound()
-        
+
         events.append((yb[0], -i-1))
         events.append((yb[1], i))
-        
+
     events.sort()
 
     miny = events[0][0]
     maxy = events[-1][0]
-    
+
     lines_set = set()
     ecnt = 0
 
@@ -58,22 +57,24 @@ def polygon_fill(p: List[Node], func: callable):
             else:
                 idx = e[1]
                 lines_set.remove(lines[idx])
-        
+
         cross = []
         for x in point_by_y[y]:
             ano = point_map[(x, y)]
-            assert len(ano) == 2, "should be another 2 points, x={}, y={}, ano={}".format(x, y, ano)
-            
+            assert len(ano) == 2, "should be another 2 points, x={}, y={}, ano={}".format(
+                x, y, ano)
+
             if (ano[0][1] >= y) == (ano[1][1] >= y):
                 w = 2
             else:
                 w = 1
-            
+
             cross.append((x, w))
 
         for l in lines_set:
             indicator, x = l.get_x(y)
-            assert indicator != -1, "shouldn't be not having cross point, y={}".format(y)
+            assert indicator != - \
+                1, "shouldn't be not having cross point, y={}".format(y)
 
             if indicator == 1:
                 x = int(round(x))
@@ -81,24 +82,22 @@ def polygon_fill(p: List[Node], func: callable):
                     cross.append((x, 1))
 
         cross.sort()
-        
 
         cur = 0
         cross.append((INF, 0))
-        
+
         n = len(cross)
         for i in range(n-1):
             x1 = cross[i][0]
             w = cross[i][1]
             x2 = cross[i+1][0]
             cur += w
-            
+
             if cur % 2 == 1:
-                
+
                 for x in range(x1, x2+1):
                     func(x, y)
-        
-        
+
 
 class PolygonFillGrid(Grid):
     def __init__(self, fill_func, **params):
@@ -113,6 +112,7 @@ class PolygonFillGrid(Grid):
         self.toggle(node.x, node.y)
 
         buf = []
+
         def set_pixel_with_check(x: int, y: int):
             buf.append((x, y))
 
@@ -127,12 +127,12 @@ class PolygonFillGrid(Grid):
             for p in buf:
                 self.toggle(p[0], p[1], 1)
 
-            
         if self.p.count(node) > 1:
             self.p = self.p[:-1]
             # print("polygon")
             self.fill_func(self.p, self.toggle)
             self.p = []
+
 
 if __name__ == "__main__":
     import sys

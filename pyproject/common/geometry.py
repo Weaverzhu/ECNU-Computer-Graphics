@@ -1,4 +1,6 @@
 from typing import List
+from math import cos, sin
+import numpy as np
 
 INF = 10000000000
 MAGIC = 998244353
@@ -38,6 +40,31 @@ class Point2(Vector2):
     def transpose(self):
         return Point2(self.p[1], self.p[0])
 
+    def affine(self, A):
+        A = np.array(A)
+        p = np.array([self.p[0], self.p[1], 1])
+        p2 = A * p
+        return Point2(p2[0], p2[1])
+
+    def rotate(self, p, theta):
+        '''
+        theta is in radius
+        '''
+        return self.affine(
+            [
+                [-cos(theta), sin(theta), 0],
+                [sin(theta), cos(theta), 0],
+                [0, 0, 1]
+            ]
+        )
+
+    def move(self, x, y):
+        return self.affine([
+            [x, 0, 0],
+            [0, y, 0],
+            [0, 0, 1]
+        ])
+
     pass
 
 
@@ -73,4 +100,3 @@ class Line2:
 
     def get_y(self, x):
         return Line2(self.a.transpose(), self.b.transpose()).get_x(x)
-        

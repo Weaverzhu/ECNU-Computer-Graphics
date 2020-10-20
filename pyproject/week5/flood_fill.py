@@ -17,12 +17,13 @@ OPTIONS = [
 ]
 
 STATUS_DEF = {
-    "BORDER" : 2,
-    "DEFAULT" : 0,
-    "FILL" : 1
+    "BORDER": 2,
+    "DEFAULT": 0,
+    "FILL": 1
 }
 
 __dbg = 0
+
 
 def flood_fill(st: Point2, g, func: callable):
     q = Queue()
@@ -40,7 +41,7 @@ def flood_fill(st: Point2, g, func: callable):
         # __dbg += 1
         # if __dbg == 5:
         #     exit()
-                
+
     pass
 
 
@@ -62,7 +63,8 @@ class FloodFillGrid(Grid):
 
     def right_click(self, node):
         self.p.clear()
-        flood_fill(Point2(node.x, node.y), self, self.toggle_func(STATUS_DEF["FILL"]))
+        flood_fill(Point2(node.x, node.y), self,
+                   self.toggle_func(STATUS_DEF["FILL"]))
         pass
 
 

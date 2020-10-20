@@ -38,6 +38,7 @@ class CircleGrid(Grid):
             draw_circle(self.p[0], self.p[1], r, self.toggle)
             self.p = None
 
+
 if __name__ == "__main__":
 
     import sys

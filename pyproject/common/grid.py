@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QGridLayout,
     QFrame,
+    QPushButton
 )
 
 from .color import COLOR
@@ -22,7 +23,8 @@ class Node(QFrame):
 
     def set_color(self, color):
         self.__color = color
-        css = "background-color: {};border: 1px solid black;".format(COLOR[color])
+        css = "background-color: {};border: 1px solid black;".format(
+            COLOR[color])
         self.setStyleSheet(css)
 
     def get_color(self, color):
@@ -55,8 +57,12 @@ class Node(QFrame):
         return "<Node x={}, y={}, state={}>".format(self.x, self.y, self.on)
 
 
+class Button:
+    pass
+
+
 class Grid(QWidget):
-    def __init__(self, n, size=500):
+    def __init__(self, n, size=500, buttons=[]):
         super().__init__()
         self.n = n
         self.size = size
@@ -98,15 +104,11 @@ class Grid(QWidget):
     def get_node(self, x, y):
         return self.grid[x][self.n - 1 - y]
 
-    
-
     def toggle(self, x, y, state=1):
-        print(x, y, state)
         n = self.n
         if x < 0 or x >= n or y < 0 or y >= n:
             return
         self.get_node(x, y).toggle(state)
-
 
     pass
 
