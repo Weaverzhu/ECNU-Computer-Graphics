@@ -10,6 +10,8 @@ from PyQt5.QtWidgets import (
     QFrame,
 )
 
+from .color import COLOR
+
 from PyQt5.QtCore import Qt
 
 
@@ -18,16 +20,24 @@ class Node(QFrame):
         self.on = state
         self.update()
 
+    def set_color(self, color):
+        self.__color = color
+        css = "background-color: {};border: 1px solid black;".format(COLOR[color])
+        self.setStyleSheet(css)
+
+    def get_color(self, color):
+        return self.__color
+
     def update(self):
         if self.on == 1:
-            self.setStyleSheet("background-color: #935115;border: 1px solid black;")
+            self.set_color("ORANGE")
         elif self.on == 0:
-            self.setStyleSheet("background-color: #283747;border: 1px solid black;")
+            self.set_color("DEFAULT")
         elif self.on == 2:
-            self.setStyleSheet("background-color: #ffffff;border: 1px solid black;")
+            self.set_color("RED")
 
     def mousePressEvent(self, event):
-        self.call_back(self)
+        self.call_back(self, event)
         pass
 
     def __init__(self, size, mainWindow, x, y, call_back):
@@ -55,7 +65,7 @@ class Grid(QWidget):
         grid_size = size // n
         self.grid = [
             [
-                Node(grid_size, self, j, self.n - 1 - i, self.grid_click)
+                Node(grid_size, self, j, self.n - 1 - i, self.dispach)
                 for i in range(n)
             ]
             for j in range(n)
@@ -68,14 +78,34 @@ class Grid(QWidget):
 
         self.click_queue = []
 
+    def dispach(self, node, event):
+        if event.button() == Qt.RightButton:
+            self.right_click(node)
+        else:
+            self.grid_click(node)
+
+    def right_click(self, node):
+        pass
+
     def grid_click(self, node):
         pass
 
+    def toggle_func(self, state):
+        def func(x, y, s=state):
+            self.toggle(x, y, state)
+        return func
+
+    def get_node(self, x, y):
+        return self.grid[x][self.n - 1 - y]
+
+    
+
     def toggle(self, x, y, state=1):
+        print(x, y, state)
         n = self.n
         if x < 0 or x >= n or y < 0 or y >= n:
             return
-        self.grid[x][self.n - 1 - y].toggle(state)
+        self.get_node(x, y).toggle(state)
 
 
     pass
