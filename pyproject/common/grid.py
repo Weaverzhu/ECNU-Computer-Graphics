@@ -42,7 +42,10 @@ class Node(QFrame):
         self.call_back(self, event)
         pass
 
-    def __init__(self, size, mainWindow, x, y, call_back):
+    def keyPressEvent(self, event):
+        pass
+
+    def __init__(self, size, mainWindow, x, y, call_back, keyboard=None):
         super(Node, self).__init__(mainWindow)
         self.setFixedSize(size, size)
         self.grid = mainWindow
@@ -71,7 +74,8 @@ class Grid(QWidget):
         grid_size = size // n
         self.grid = [
             [
-                Node(grid_size, self, j, self.n - 1 - i, self.dispach)
+                Node(grid_size, self, j, self.n - 1 - i,
+                     self.dispach, self.keyboard_dispach)
                 for i in range(n)
             ]
             for j in range(n)
@@ -89,6 +93,9 @@ class Grid(QWidget):
             self.right_click(node)
         else:
             self.grid_click(node)
+
+    def keyboard_dispach(self, event):
+        pass
 
     def right_click(self, node):
         pass
