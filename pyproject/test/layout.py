@@ -1,14 +1,29 @@
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QDesktopWidget, QStyleFactory, QWidget,
-                             QGridLayout, QHeaderView, QTableWidgetItem, QMessageBox, QFileDialog,
-                             QSlider, QLabel, QLineEdit, QPushButton, QTableWidget, QHBoxLayout, QVBoxLayout, QFrame)
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QDesktopWidget,
+    QStyleFactory,
+    QWidget,
+    QGridLayout,
+    QHeaderView,
+    QTableWidgetItem,
+    QMessageBox,
+    QFileDialog,
+    QSlider,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QTableWidget,
+    QHBoxLayout,
+    QVBoxLayout,
+    QFrame,
+)
 from PyQt5.QtGui import QPalette, QColor, QBrush
 from PyQt5.QtCore import Qt
-from pyqtgraph import GraphicsLayoutWidget
-import pyqtgraph as pg
+
+from ..common.grid import Grid
 import numpy as np
-import pyqtgraph.exporters as pe
-import qdarkstyle
 import requests
 import sys
 import time
@@ -22,7 +37,7 @@ COLOR = {
     "green": "#00ff00",
     "blue": "#0000ff",
     "white": "#000000",
-    "black": "#ffffff"
+    "black": "#ffffff",
 }
 
 
@@ -36,7 +51,6 @@ class ColorBlock(QFrame):
 
 
 class TestWindow(QWidget):
-
     def __init__(self, **params):
         super().__init__(**params)
         self.setFixedSize(800, 800)
@@ -53,10 +67,10 @@ class TestWindow(QWidget):
         self.button_layout.addWidget(c3)
 
         self.vbox = QVBoxLayout()
-        self.vbox.addStretch(1)
-        self.vbox.addWidget(ColorBlock("blue", (400, 400), self))
+        # self.vbox.addStretch(1)
+        self.vbox.addWidget(Grid(n=10))
 
-        self.vbox.addStretch(1)
+        # self.vbox.addStretch(1)
         self.vbox.addLayout(self.button_layout)
 
         # self.setLayout(self.button_layout)
@@ -64,7 +78,7 @@ class TestWindow(QWidget):
         self.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
     ex = TestWindow()
     app.exit(app.exec_())

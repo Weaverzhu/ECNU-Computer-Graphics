@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QGridLayout,
     QFrame,
-    QPushButton
+    QPushButton,
 )
 
 from .color import COLOR
@@ -23,8 +23,7 @@ class Node(QFrame):
 
     def set_color(self, color):
         self.__color = color
-        css = "background-color: {};border: 1px solid black;".format(
-            COLOR[color])
+        css = "background-color: {};border: 1px solid black;".format(COLOR[color])
         self.setStyleSheet(css)
 
     def get_color(self, color):
@@ -60,22 +59,35 @@ class Node(QFrame):
         return "<Node x={}, y={}, state={}>".format(self.x, self.y, self.on)
 
 
-class Button:
-    pass
+PADDING = 50
+PANEL = 200
 
 
 class Grid(QWidget):
-    def __init__(self, n, size=500, buttons=[]):
+    def __init__(self, n, size=500, button_texts=[]):
         super().__init__()
         self.n = n
         self.size = size
-        self.setFixedSize(size, size)
-        self.setStyleSheet("background-color: #283747;")
+        self.setFixedSize(size + PADDING * 2, size + PADDING + PANEL)
+        # self.setStyleSheet("background-color: #283747;")
+
+        base = self.init_grid(size, n)
+        self.click_queue = []
+        self.buttons = []
+        self.init_button(button_texts, base)
+
+    def init_grid(self, size, n):
         grid_size = size // n
         self.grid = [
             [
-                Node(grid_size, self, j, self.n - 1 - i,
-                     self.dispach, self.keyboard_dispach)
+                Node(
+                    grid_size,
+                    self,
+                    j,
+                    self.n - 1 - i,
+                    self.dispach,
+                    self.keyboard_dispach,
+                )
                 for i in range(n)
             ]
             for j in range(n)
@@ -84,9 +96,22 @@ class Grid(QWidget):
         for i in range(n):
             for j in range(n):
                 node = self.grid[i][j]
-                node.move(i * grid_size, j * grid_size)
+                node.move(i * grid_size + PADDING, j * grid_size + PADDING)
 
-        self.click_queue = []
+        return (n - 1) * grid_size + PADDING
+
+    def init_button(self, button_texts, base):
+        n_buttons = len(button_texts)
+
+        if n_buttons == 0:
+            return
+
+        num = 0
+        for text in button_texts:
+            btn = QPushButton(text=text, parent=self)
+            self.buttons.append(btn)
+            btn.move(PADDING + num * (PADDING + btn.size().width()), base + PADDING)
+            num += 1
 
     def dispach(self, node, event):
         if event.button() == Qt.RightButton:
@@ -106,16 +131,33 @@ class Grid(QWidget):
     def toggle_func(self, state):
         def func(x, y, s=state):
             self.toggle(x, y, state)
+
         return func
 
     def get_node(self, x, y):
         return self.grid[x][self.n - 1 - y]
+
+    def set_node(self, node):
+        self.grid[x][self.n - 1 - y] = node
 
     def toggle(self, x, y, state=1):
         n = self.n
         if x < 0 or x >= n or y < 0 or y >= n:
             return
         self.get_node(x, y).toggle(state)
+
+    def connect_btn_funcs(self, funcs):
+        num = 0
+        while num < len(self.buttons):
+            f = funcs[num]
+            if f is not None:
+                self.buttons[num].clicked.connect(f)
+
+    def dump(self, fileName):
+        with open(fileName, "w") as f:
+            for i in range(self.n):
+                for j in range(self.n):
+                    f.write("{} {} {}\n".format(i, j, self.get_node(i, j).on))
 
     pass
 
