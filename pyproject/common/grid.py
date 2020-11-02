@@ -58,6 +58,9 @@ class Node(QFrame):
     def __str__(self):
         return "<Node x={}, y={}, state={}>".format(self.x, self.y, self.on)
 
+    def get_cord(self):
+        return [self.x, self.y]
+
 
 PADDING = 50
 PANEL = 200
