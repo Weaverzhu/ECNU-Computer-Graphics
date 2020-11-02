@@ -137,7 +137,7 @@ class Grid(QWidget):
     def get_node(self, x, y):
         return self.grid[x][self.n - 1 - y]
 
-    def set_node(self, node):
+    def set_node(self, x, y, node):
         self.grid[x][self.n - 1 - y] = node
 
     def toggle(self, x, y, state=1):
@@ -151,13 +151,24 @@ class Grid(QWidget):
         while num < len(self.buttons):
             f = funcs[num]
             if f is not None:
+                # print("connect {}".format(f))
                 self.buttons[num].clicked.connect(f)
+            num += 1
 
-    def dump(self, fileName):
+    def dump(self, fileName="save.txt"):
         with open(fileName, "w") as f:
             for i in range(self.n):
                 for j in range(self.n):
                     f.write("{} {} {}\n".format(i, j, self.get_node(i, j).on))
+
+    def load(self, fileName="save.txt"):
+        fileName = "save.txt"
+        with open(fileName, "r") as f:
+            for i in range(self.n):
+                for j in range(self.n):
+                    l = f.readline()
+                    x, y, status = map(int, l.split())
+                    self.toggle(x, y, status)
 
     pass
 

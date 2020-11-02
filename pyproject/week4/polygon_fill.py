@@ -19,7 +19,7 @@ def polygon_fill(p: List[Node], func: callable):
         a = p[i]
         ta = (a.x, a.y)
         point_by_y[a.y].append(a.x)
-        b = p[(i+1) % n]
+        b = p[(i + 1) % n]
         tb = (b.x, b.y)
         point_map[ta].append(tb)
         point_map[tb].append(ta)
@@ -35,7 +35,7 @@ def polygon_fill(p: List[Node], func: callable):
         l = lines[i]
         yb = l.y_bound()
 
-        events.append((yb[0], -i-1))
+        events.append((yb[0], -i - 1))
         events.append((yb[1], i))
 
     events.sort()
@@ -46,7 +46,7 @@ def polygon_fill(p: List[Node], func: callable):
     lines_set = set()
     ecnt = 0
 
-    for y in range(miny, maxy+1):
+    for y in range(miny, maxy + 1):
         # endpoint in p
         while ecnt < len(events) and events[ecnt][0] <= y:
             e = events[ecnt]
@@ -61,8 +61,9 @@ def polygon_fill(p: List[Node], func: callable):
         cross = []
         for x in point_by_y[y]:
             ano = point_map[(x, y)]
-            assert len(ano) == 2, "should be another 2 points, x={}, y={}, ano={}".format(
-                x, y, ano)
+            assert (
+                len(ano) == 2
+            ), "should be another 2 points, x={}, y={}, ano={}".format(x, y, ano)
 
             if (ano[0][1] >= y) == (ano[1][1] >= y):
                 w = 2
@@ -73,8 +74,9 @@ def polygon_fill(p: List[Node], func: callable):
 
         for l in lines_set:
             indicator, x = l.get_x(y)
-            assert indicator != - \
-                1, "shouldn't be not having cross point, y={}".format(y)
+            assert indicator != -1, "shouldn't be not having cross point, y={}".format(
+                y
+            )
 
             if indicator == 1:
                 x = int(round(x))
@@ -87,21 +89,22 @@ def polygon_fill(p: List[Node], func: callable):
         cross.append((INF, 0))
 
         n = len(cross)
-        for i in range(n-1):
+        for i in range(n - 1):
             x1 = cross[i][0]
             w = cross[i][1]
-            x2 = cross[i+1][0]
+            x2 = cross[i + 1][0]
             cur += w
 
             if cur % 2 == 1:
 
-                for x in range(x1, x2+1):
+                for x in range(x1, x2 + 1):
                     func(x, y)
 
 
 class PolygonFillGrid(Grid):
-    def __init__(self, fill_func, **params):
+    def __init__(self, fill_func, dump, **params):
         super().__init__(**params)
+        self.will_dump = dump
 
         self.fill_func = fill_func
         self.p = []
@@ -131,6 +134,8 @@ class PolygonFillGrid(Grid):
             self.p = self.p[:-1]
             # print("polygon")
             self.fill_func(self.p, self.toggle)
+            if self.will_dump:
+                self.dump()
             self.p = []
 
 
@@ -138,6 +143,6 @@ if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    gui = PolygonFillGrid(n=30, fill_func=polygon_fill)
+    gui = PolygonFillGrid(n=30, fill_func=polygon_fill, dump=True)
     gui.show()
     sys.exit(app.exec_())
