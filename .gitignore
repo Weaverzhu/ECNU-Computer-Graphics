@@ -1,6 +1,7 @@
 # common
 *.pdf
 save.txt
+info.txt
 
 
 # Python
