@@ -139,11 +139,15 @@ class Trans2DGrid(Grid):
 
         # print(bp, v1, v2)
 
+        for p in self.selected:
+            p.toggle(0)
+        self.selected = []
+
         v1[0] -= bp[0]
         v2[0] -= bp[0]
         v1[1] -= bp[1]
         v2[1] -= bp[1]
-        # print(bp, v1, v2)
+        print(bp, v1, v2)
 
         theta = math.acos(dot(v1, v2) / norm(v1) / norm(v2))
 
