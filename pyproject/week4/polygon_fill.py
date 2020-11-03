@@ -10,10 +10,17 @@ INF = 1000000000
 
 
 def polygon_fill(p: List[Node], func: callable):
+    
+
     lines = []
     n = len(p)
     point_map = defaultdict(list)
     point_by_y = defaultdict(list)
+
+    for i in range(n):
+        p1 = p[i]
+        p2 = p[(i+1)%n]
+        bresenham([p1.x, p1.y], [p2.x, p2.y], func)
 
     for i in range(n):
         a = p[i]
@@ -102,10 +109,10 @@ def polygon_fill(p: List[Node], func: callable):
 
 
 class PolygonFillGrid(Grid):
-    def __init__(self, fill_func, dump, **params):
+    def __init__(self, fill_func, dump, info, **params):
         super().__init__(**params)
         self.will_dump = dump
-
+        self.will_info = info
         self.fill_func = fill_func
         self.p = []
         self.s = []
@@ -136,13 +143,24 @@ class PolygonFillGrid(Grid):
             self.fill_func(self.p, self.toggle)
             if self.will_dump:
                 self.dump()
+            if self.will_info:
+                self.info()
             self.p = []
+
+    def info(self, fileName="info.txt"):
+        fileName = "info.txt"
+
+        with open(fileName, "w") as f:
+            f.write("polygon\n")
+            f.write("{}\n".format(len(self.p)))
+            for p in self.p:
+                f.write("{} {}\n".format(p.x, p.y))
 
 
 if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    gui = PolygonFillGrid(n=30, fill_func=polygon_fill, dump=True)
+    gui = PolygonFillGrid(n=50, fill_func=polygon_fill, dump=True, info=True)
     gui.show()
     sys.exit(app.exec_())
