@@ -24,6 +24,7 @@ def bresenham(p0, p1, func):
         p = p + 2 * d[se]
         func(p0[0], p0[1])
 
+
 class BresenhanGrid(Grid):
     def __init__(self, line_func, **params):
         super().__init__(**params)
@@ -37,6 +38,7 @@ class BresenhanGrid(Grid):
         else:
             self.line_func(self.p, [node.x, node.y], self.toggle)
             self.p = None
+
 
 def main():
 
