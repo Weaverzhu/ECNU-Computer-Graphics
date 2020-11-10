@@ -2,7 +2,7 @@
 *.pdf
 save.txt
 info.txt
-
+.vscode
 
 # Python
 # Byte-compiled / optimized / DLL files
