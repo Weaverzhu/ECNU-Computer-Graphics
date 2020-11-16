@@ -91,6 +91,6 @@ if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    gui = LiangGrid(n=50, rec=[(5, 5), (25, 25)])
+    gui = LiangGrid(n=50, rec=[(5, 5), (45, 25)])
     gui.show()
     sys.exit(app.exec_())
